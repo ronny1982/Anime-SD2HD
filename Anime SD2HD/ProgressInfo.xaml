@@ -1,0 +1,16 @@
+﻿<UserControl
+    x:Class="AnimeSD2HD.ProgressInfo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <StackPanel Visibility="{x:Bind Path=ViewModel.VisibleState, Mode=OneWay}">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Opacity="0.5">
+            <TextBlock Margin="4" FontSize="12" Text="Elapsed" />
+            <TextBlock Margin="4" FontSize="12" Text="{x:Bind Path=ViewModel.Elapsed, Mode=OneWay}" />
+            <TextBlock Margin="4" FontSize="12" Text="•" />
+            <TextBlock Margin="4" FontSize="12" Text="Remaining" />
+            <TextBlock Margin="4" FontSize="12" Text="{x:Bind Path=ViewModel.Remaining, Mode=OneWay}" />
+        </StackPanel>
+        <ProgressBar Margin="4" HorizontalAlignment="Stretch" Minimum="{x:Bind Path=ViewModel.Minimum, Mode=OneWay}" Maximum="{x:Bind Path=ViewModel.Maximum, Mode=OneWay}" Value="{x:Bind Path=ViewModel.Value, Mode=OneWay}" IsIndeterminate="{x:Bind Path=ViewModel.IsIndeterminate, Mode=OneWay}" />
+    </StackPanel>
+</UserControl>

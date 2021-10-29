@@ -1,0 +1,151 @@
+﻿<Window
+    x:Class="AnimeSD2HD.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:animesd2hd="using:AnimeSD2HD">
+
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBox Grid.Row="0" Grid.Column="0" Margin="4" IsReadOnly="True" Text="{x:Bind Path=Configuration.InputMediaFile, Mode=OneWay}" />
+            <Button Grid.Row="0" Grid.Column="1" Margin="4" Command="{x:Bind Path=Configuration.OpenFileCommand, Mode=OneTime}" HorizontalAlignment="Stretch" Content="Input File …" />
+            <TextBox Grid.Row="1" Grid.Column="0" Margin="4" Text="{x:Bind Path=Configuration.OutputMediaFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Button Grid.Row="1" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" Content="Output Directory …" />
+        </Grid>
+        <Grid Grid.Row="1"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <!-- [PANEL] Step 1 -->
+            <Grid Grid.Column="0" Margin="4" Padding="4" Background="#F4F4F4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" MinHeight="64" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" VerticalAlignment="Center" FontWeight="Bold" Text="Step 1: Extract Images" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Original Size" />
+                <StackPanel Grid.Row="1" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" Orientation="Horizontal">
+                    <NumberBox VerticalAlignment="Center" IsEnabled="False" Value="{x:Bind Path=Configuration.InputMediaWidth, Mode=OneWay}" />
+                    <TextBlock VerticalAlignment="Center" Margin="4, 0, 4, 0" Text="×" />
+                    <NumberBox VerticalAlignment="Center" IsEnabled="False" Value="{x:Bind Path=Configuration.InputMediaHeight, Mode=OneWay}" />
+                </StackPanel>
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Extract Size" />
+                <StackPanel Grid.Row="2" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" Orientation="Horizontal">
+                    <NumberBox VerticalAlignment="Center" IsEnabled="False" Value="{x:Bind Path=Configuration.ExtractMediaWidth, Mode=OneWay}" />
+                    <TextBlock VerticalAlignment="Center" Margin="4, 0, 4, 0" Text="×" />
+                    <NumberBox VerticalAlignment="Center" IsEnabled="False" Value="{x:Bind Path=Configuration.ExtractMediaHeight, Mode=OneWay}" />
+                </StackPanel>
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Frame Rate" />
+                <TextBox Grid.Row="3" Grid.Column="1" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Left" IsEnabled="False" Text="{x:Bind Path=Configuration.FrameRate, Mode=OneWay}" />
+                <animesd2hd:ProgressInfo Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" ViewModel="{x:Bind Path=Configuration.ImageExtractorProgress, Mode=OneWay}" />
+            </Grid>
+            <!-- [PANEL] Step 2 -->
+            <Grid Grid.Column="1" Margin="4" Padding="4" Background="#F4F4F4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" MinHeight="64" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" VerticalAlignment="Center" FontWeight="Bold" Text="Step 2: Upscale Images" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Upscale Model" />
+                <ComboBox Grid.Row="1" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" DisplayMemberPath="Label" ItemsSource="{x:Bind Path=Configuration.AvailableUpscaleModels, Mode=OneTime}" SelectedItem="{x:Bind Path=Configuration.UpscaleModel, Mode=TwoWay}" />
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Denoise Level" />
+                <ComboBox Grid.Row="2" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" DisplayMemberPath="Label" SelectedValuePath="Value" ItemsSource="{x:Bind Path=Configuration.UpscaleModel.DenoiseOptions, Mode=OneWay}" SelectedValue="{x:Bind Path=Configuration.DenoiseLevel, Mode=TwoWay}" />
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Scale Factor" />
+                <ComboBox Grid.Row="3" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" DisplayMemberPath="Label" SelectedValuePath="Value" ItemsSource="{x:Bind Path=Configuration.UpscaleModel.ScalingOptions, Mode=OneWay}" SelectedValue="{x:Bind Path=Configuration.ScalingFactor, Mode=TwoWay}" />
+                <TextBlock Grid.Row="4" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Upscale Size" />
+                <StackPanel Grid.Row="4" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" Orientation="Horizontal">
+                    <NumberBox VerticalAlignment="Center" IsEnabled="False" Value="{x:Bind Path=Configuration.OutputMediaWidth, Mode=OneWay}" />
+                    <TextBlock VerticalAlignment="Center" Margin="4, 0, 4, 0" Text="×" />
+                    <NumberBox VerticalAlignment="Center" Value="{x:Bind Path=Configuration.OutputMediaHeight, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                </StackPanel>
+                <animesd2hd:ProgressInfo Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" ViewModel="{x:Bind Path=Configuration.ImageUpscalerProgress, Mode=OneWay}" />
+            </Grid>
+            <!-- [PANEL] Step 3 -->
+            <Grid Grid.Column="2" Margin="4" Padding="4" Background="#F4F4F4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" MinHeight="64" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" VerticalAlignment="Center" FontWeight="Bold" Text="Step 3: Re-Compress Media" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Video Codec" />
+                <ComboBox Grid.Row="1" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" IsEditable="True" Text="{x:Bind Path=Configuration.VideoCodec, Mode=TwoWay}">
+                    <ComboBoxItem IsSelected="True" Content="libx265" />
+                </ComboBox>
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Video Preset" />
+                <ComboBox Grid.Row="2" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" IsEditable="True" Text="{x:Bind Path=Configuration.VideoPreset, Mode=TwoWay}">
+                    <ComboBoxItem IsSelected="True" Content="veryslow" />
+                </ComboBox>
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Video Tuning" />
+                <ComboBox Grid.Row="3" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" IsEditable="True" Text="{x:Bind Path=Configuration.VideoTuning, Mode=TwoWay}">
+                    <ComboBoxItem IsSelected="True" Content="animation" />
+                </ComboBox>
+                <TextBlock Grid.Row="4" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Video CRF" />
+                <NumberBox Grid.Row="4" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" Minimum="15" Maximum="30" Value="{x:Bind Path=Configuration.VideoCRF, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Grid.Row="5" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Audio Codec" />
+                <ComboBox Grid.Row="5" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" IsEditable="True" Text="{x:Bind Path=Configuration.AudioCodec, Mode=TwoWay}">
+                    <ComboBoxItem Content="copy" />
+                    <ComboBoxItem IsSelected="True" Content="aac" />
+                </ComboBox>
+                <TextBlock Grid.Row="6" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Audio Bitrate" />
+                <ComboBox Grid.Row="6" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" IsEditable="True" Text="{x:Bind Path=Configuration.AudioBitrate, Mode=TwoWay}">
+                    <ComboBoxItem Content="64k" />
+                    <ComboBoxItem Content="96k" />
+                    <ComboBoxItem IsSelected="True" Content="128k" />
+                    <ComboBoxItem Content="192k" />
+                    <ComboBoxItem Content="256k" />
+                    <ComboBoxItem Content="384k" />
+                </ComboBox>
+                <TextBlock Grid.Row="7" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Subtitle Codec" />
+                <ComboBox Grid.Row="7" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" IsEditable="True" Text="{x:Bind Path=Configuration.SubtitleCodec, Mode=TwoWay}">
+                    <ComboBoxItem IsSelected="True" Content="copy" />
+                </ComboBox>
+                <animesd2hd:ProgressInfo Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" ViewModel="{x:Bind Path=Configuration.MediaRecompressMuxerProgress, Mode=OneWay}" />
+            </Grid>
+        </Grid>
+        <!--
+        <TextBox Grid.Row="2" Margin="4" Padding="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" Foreground="Green" ScrollViewer.VerticalScrollBarVisibility="Visible" IsReadOnly="True" TextWrapping="WrapWholeWords" FontFamily="Consolas" Header="Console Output" Text="Foo Bar ..."/>
+        -->
+        <TextBox Grid.Row="2" Margin="4" Padding="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" Foreground="Green" ScrollViewer.VerticalScrollBarVisibility="Visible" AcceptsReturn="True" IsReadOnly="True" FontFamily="Consolas" Header="Console Output" Text="Foo Bar ..."/>
+        <Button Grid.Row="3" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{x:Bind Path=Configuration.StartStopCommand, Mode=OneWay}" Content="{x:Bind Path=Configuration.StartStopLabel, Mode=OneWay}" />
+    </Grid>
+</Window>
