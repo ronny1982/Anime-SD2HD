@@ -38,6 +38,12 @@ namespace AnimeSD2HD
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
+            Kill = () =>
+            {
+                Kill = null;
+                process.Kill();
+                process.WaitForExit();
+            };
             process.WaitForExit();
             return process.ExitCode;
         }
@@ -53,7 +59,7 @@ namespace AnimeSD2HD
             timer.Elapsed += (_, __) =>
             {
                 var processedCount = Directory.EnumerateFiles(args.OutputDirectory, globImage).Count();
-                ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, imageCount, processedCount, measure.Elapsed));
+                ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, imageCount, processedCount, measure.Elapsed, ProgressStatus.Active));
             };
             var exitcode = await Task.Run(() => {
                 if (Directory.Exists(args.OutputDirectory))
@@ -68,13 +74,14 @@ namespace AnimeSD2HD
                 timer.Stop();
                 return exitcode;
             });
-            ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, 1d, 1d, measure.Elapsed));
+            ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, 1d, 1d, measure.Elapsed, exitcode == 0 ? ProgressStatus.Success : ProgressStatus.Failed));
             return exitcode == 0 ? Void.Default : throw new Exception($"Process failed with exit code: {exitcode}");
         }
 
+        private Action Kill;
         public async Task Abort()
         {
-            // TODO: Kill process ..
+            Kill?.Invoke();
             await Cleanup();
         }
 

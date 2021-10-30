@@ -49,7 +49,7 @@ namespace AnimeSD2HD
                 var matchTime = rgxTime.Match(args.Data ?? string.Empty);
                 if (matchTime.Success && matchTime.Groups.TryGetValue("TIME", out var groupTime) && TimeSpan.TryParse(groupTime.Value, out var valueTime))
                 {
-                    ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, duration, valueTime.TotalSeconds, measure.Elapsed));
+                    ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, duration, valueTime.TotalSeconds, measure.Elapsed, ProgressStatus.Active));
                 }
                 else
                 {
@@ -60,6 +60,12 @@ namespace AnimeSD2HD
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
+            Kill = () =>
+            {
+                Kill = null;
+                process.Kill();
+                process.WaitForExit();
+            };
             process.WaitForExit();
             measure.Stop();
             return (process.ExitCode, measure.Elapsed);
@@ -75,13 +81,14 @@ namespace AnimeSD2HD
                 Directory.CreateDirectory(args.OutputDirectory);
                 return Extract(args);
             });
-            ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, 1d, 1d, runtime));
+            ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, 1d, 1d, runtime, exitcode == 0 ? ProgressStatus.Success : ProgressStatus.Failed));
             return exitcode == 0 ? Void.Default : throw new Exception($"Process failed with exit code: {exitcode}");
         }
 
+        private Action Kill;
         public async Task Abort()
         {
-            // TODO: Kill process ..
+            Kill?.Invoke();
             await Cleanup();
         }
 

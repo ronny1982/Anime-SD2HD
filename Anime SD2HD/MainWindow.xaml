@@ -76,7 +76,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" VerticalAlignment="Center" FontWeight="Bold" Text="Step 2: Upscale Images" />
                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Upscale Model" />
-                <ComboBox Grid.Row="1" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" DisplayMemberPath="Label" ItemsSource="{x:Bind Path=Configuration.AvailableUpscaleModels, Mode=OneTime}" SelectedItem="{x:Bind Path=Configuration.UpscaleModel, Mode=TwoWay}" />
+                <ComboBox Grid.Row="1" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" DisplayMemberPath="Label" ItemsSource="{x:Bind Path=Configuration.AvailableUpscaleModels, Mode=OneTime}" SelectedItem="{x:Bind Path=Configuration.UpscaleModel, Mode=TwoWay}" IsEnabled="False" />
                 <TextBlock Grid.Row="2" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Denoise Level" />
                 <ComboBox Grid.Row="2" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" DisplayMemberPath="Label" SelectedValuePath="Value" ItemsSource="{x:Bind Path=Configuration.UpscaleModel.DenoiseOptions, Mode=OneWay}" SelectedValue="{x:Bind Path=Configuration.DenoiseLevel, Mode=TwoWay}" />
                 <TextBlock Grid.Row="3" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Scale Factor" />

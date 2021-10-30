@@ -50,12 +50,12 @@ namespace AnimeSD2HD
 
         public async Task<MediaInfo> Run(string mediaFile)
         {
-            ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, true, 0d, 1d, 1d, TimeSpan.Zero));
+            ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, true, 0d, 1d, 1d, TimeSpan.Zero, ProgressStatus.Active));
             var measure = new Stopwatch();
             measure.Start();
             var (exitcode, info) = await Task.Run(() => Extract(mediaFile));
             measure.Stop();
-            ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, 1d, 1d, measure.Elapsed));
+            ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, 1d, 1d, measure.Elapsed, ProgressStatus.Success));
             return exitcode == 0 ? info : throw new Exception($"Process failed with exit code: {exitcode}");
         }
 

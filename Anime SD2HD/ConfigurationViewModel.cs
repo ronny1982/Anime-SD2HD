@@ -103,9 +103,9 @@ namespace AnimeSD2HD
         private void ResetProgress()
         {
             ConsoleOutput = string.Empty;
-            ImageExtractorProgress = new ProgressInfoViewModel(true, false, 0d, 0d, 1d, TimeSpan.Zero);
-            ImageUpscalerProgress = new ProgressInfoViewModel(true, false, 0d, 0d, 1d, TimeSpan.Zero);
-            MediaRecompressMuxerProgress = new ProgressInfoViewModel(true, false, 0d, 0d, 1d, TimeSpan.Zero);
+            ImageExtractorProgress = new ProgressInfoViewModel(true, false, 0d, 0d, 1d, TimeSpan.Zero, ProgressStatus.None);
+            ImageUpscalerProgress = new ProgressInfoViewModel(true, false, 0d, 0d, 1d, TimeSpan.Zero, ProgressStatus.None);
+            MediaRecompressMuxerProgress = new ProgressInfoViewModel(true, false, 0d, 0d, 1d, TimeSpan.Zero, ProgressStatus.None);
         }
 
         public string ConsoleOutput
@@ -138,12 +138,12 @@ namespace AnimeSD2HD
             set => SetPropertyValue(value);
         }
 
-        private bool StartCanExecute(object parameter)
+        private bool StartCanExecute(object _)
         {
-            return true;
+            return true; // !string.IsNullOrWhiteSpace(InputMediaFile);
         }
 
-        private async void StartExecute(object parameter)
+        private async void StartExecute(object _)
         {
             ResetProgress();
             StartStopLabel = "Stop"; // Properties.Resources.StartButtonLabel;
@@ -151,7 +151,9 @@ namespace AnimeSD2HD
             try
             {
                 await imageExtractor.Run(new ImageExtractorArgs(InputMediaFile, ExtractionDirectory, ExtractMediaWidth, ExtractMediaHeight));
+                ConsoleOutput += Environment.NewLine;
                 await imageUpscaler.Run(new ImageUpscalerArgs(ExtractionDirectory, UpscaleDirectory, UpscaleModel.ID, ScalingFactor, DenoiseLevel));
+                ConsoleOutput += Environment.NewLine;
                 await mediaRecompressMuxer.Run(new ImageRecompressMuxerArgs(InputMediaFile, UpscaleDirectory, OutputMediaFile, FrameRate, SubtitleCodec, AudioCodec, AudioBitrate, VideoCodec, VideoCRF, VideoPreset, VideoTuning));
             }
             catch
@@ -161,16 +163,16 @@ namespace AnimeSD2HD
             finally
             {
                 // TODO: clean-up ...
-                StopExecute(parameter);
+                StopExecute(null);
             }
         }
 
-        private bool StopCanExecute(object parameter)
+        private bool StopCanExecute(object _)
         {
             return true;
         }
 
-        private void StopExecute(object parameter)
+        private void StopExecute(object _)
         {
             try
             {
