@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Windows.Storage.Pickers;
 
 namespace AnimeSD2HD
@@ -25,6 +26,14 @@ namespace AnimeSD2HD
                 picker.FileTypeFilter.Add(extension);
             }
             return picker;
+        }
+
+        private void TextChangedHandler(object sender, TextChangedEventArgs _)
+        {
+            if (sender as TextBox == ConsoleTextBox && ConsoleTextBox.FocusState == FocusState.Unfocused)
+            {
+                ConsoleScrollViewer.ScrollToVerticalOffset(ConsoleScrollViewer.ScrollableHeight);
+            }
         }
     }
 }

@@ -142,10 +142,9 @@
                 <animesd2hd:ProgressInfo Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" ViewModel="{x:Bind Path=Configuration.MediaRecompressMuxerProgress, Mode=OneWay}" />
             </Grid>
         </Grid>
-        <!--
-        <TextBox Grid.Row="2" Margin="4" Padding="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" Foreground="Green" ScrollViewer.VerticalScrollBarVisibility="Visible" IsReadOnly="True" TextWrapping="WrapWholeWords" FontFamily="Consolas" Header="Console Output" Text="Foo Bar ..."/>
-        -->
-        <TextBox Grid.Row="2" Margin="4" Padding="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" Foreground="Green" ScrollViewer.VerticalScrollBarVisibility="Visible" AcceptsReturn="True" IsReadOnly="True" FontFamily="Consolas" Header="Console Output" Text="Foo Bar ..."/>
+        <ScrollViewer x:Name="ConsoleScrollViewer" Grid.Row="2" Margin="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto">
+            <TextBox x:Name="ConsoleTextBox" IsReadOnly="True" Padding="2" RequestedTheme="Dark" Background="Black" Foreground="Green" AcceptsReturn="True" FontFamily="Consolas" TextChanged="TextChangedHandler" Text="{x:Bind Path=Configuration.ConsoleOutput, Mode=OneWay}"/>
+        </ScrollViewer>
         <Button Grid.Row="3" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{x:Bind Path=Configuration.StartStopCommand, Mode=OneWay}" Content="{x:Bind Path=Configuration.StartStopLabel, Mode=OneWay}" />
     </Grid>
 </Window>

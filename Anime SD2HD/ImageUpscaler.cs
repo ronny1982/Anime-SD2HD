@@ -14,6 +14,8 @@ namespace AnimeSD2HD
         private const string globImage = "*.png";
 
         public event EventHandler<ProgressInfoViewModel> ProgressUpdate;
+        public event EventHandler<string> StandardOutputReceived;
+        public event EventHandler<string> StandardErrorReceived;
 
         public ImageUpscaler(string application)
         {
@@ -31,8 +33,8 @@ namespace AnimeSD2HD
                 RedirectStandardError = true,
                 CreateNoWindow = true
             };
-            process.OutputDataReceived += (_, args) => Debug.WriteLine("STDOUT [ImageUpscaler] => " + args.Data);
-            process.ErrorDataReceived += (_, args) => Debug.WriteLine("STDERR [ImageUpscaler] => " + args.Data);
+            process.OutputDataReceived += (_, args) => StandardOutputReceived?.Invoke(this, args.Data);
+            process.ErrorDataReceived += (_, args) => StandardErrorReceived?.Invoke(this, args.Data);
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();

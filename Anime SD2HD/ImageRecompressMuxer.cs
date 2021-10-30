@@ -16,6 +16,8 @@ namespace AnimeSD2HD
         private readonly Regex rgxFrame = new(@"frame=\s*(?<FRAME>\d+)");
 
         public event EventHandler<ProgressInfoViewModel> ProgressUpdate;
+        public event EventHandler<string> StandardOutputReceived;
+        public event EventHandler<string> StandardErrorReceived;
 
         public ImageRecompressMuxer(string application)
         {
@@ -29,20 +31,23 @@ namespace AnimeSD2HD
             using var process = new Process();
             process.StartInfo = new ProcessStartInfo(ffmpeg)
             {
-                Arguments = $"-hide_banner -framerate {args.FrameRate} -i \"{Path.Join(args.InputDirectory, "%06d.png")}\" -i \"{args.MediaFile}\" -map 0:v -map 1:a -map 1:s -f matroska -c:s {args.SubtitleCodec} -c:a {args.AudioCodec} -b:a {args.AudioBitrate} -c:v {args.VideoCodec} -crf {args.VideoCRF} -preset {args.VideoPreset} -tune {args.VideoTuning} -pix_fmt yuv420p -y \"{args.OutputFile}\"",
+                Arguments = $"-hide_banner -framerate {args.FrameRate} -i \"{Path.Join(args.InputDirectory, "%06d.png")}\" -i \"{args.MediaFile}\" -map 0:v -map 1:a? -map 1:s? -f matroska -c:s {args.SubtitleCodec} -c:a {args.AudioCodec} -b:a {args.AudioBitrate} -c:v {args.VideoCodec} -crf {args.VideoCRF} -preset {args.VideoPreset} -tune {args.VideoTuning} -pix_fmt yuv420p -y \"{args.OutputFile}\"",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 CreateNoWindow = true
             };
-            process.OutputDataReceived += (_, args) => Debug.WriteLine("STDOUT [ImageRecompressMuxer] => " + args.Data);
+            process.OutputDataReceived += (_, args) => StandardOutputReceived?.Invoke(this, args.Data);
             process.ErrorDataReceived += (_, args) =>
             {
-                Debug.WriteLine("STDERR [ImageRecompressMuxer] => " + args.Data);
                 var matchFrame = rgxFrame.Match(args.Data ?? string.Empty);
                 if (matchFrame.Success && matchFrame.Groups.TryGetValue("FRAME", out var group) && int.TryParse(group.Value, out var frame))
                 {
                     ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, imageCount, frame, measure.Elapsed));
+                }
+                else
+                {
+                    StandardErrorReceived?.Invoke(this, args.Data);
                 }
             };
             measure.Start();

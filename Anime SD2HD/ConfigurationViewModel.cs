@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Dispatching;
 using System;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using Windows.Storage.Pickers;
@@ -29,16 +30,40 @@ namespace AnimeSD2HD
             StartStopLabel = "Start";
 
             this.mediaInfoExtractor = mediaInfoExtractor;
+            this.mediaInfoExtractor.StandardOutputReceived += ProcessStandardOutputReceived;
+            this.mediaInfoExtractor.StandardErrorReceived += ProcessStandardErrorReceived;
             this.imageExtractor = imageExtractor;
+            this.imageExtractor.StandardOutputReceived += ProcessStandardOutputReceived;
+            this.imageExtractor.StandardErrorReceived += ProcessStandardErrorReceived;
             this.imageExtractor.ProgressUpdate += ImageExtractorProgressHandler;
             this.imageUpscaler = imageUpscaler;
+            this.imageUpscaler.StandardOutputReceived += ProcessStandardOutputReceived;
+            this.imageUpscaler.StandardErrorReceived += ProcessStandardErrorReceived;
             this.imageUpscaler.ProgressUpdate += ImageUpscalerProgressHandler;
             this.mediaRecompressMuxer = mediaRecompressMuxer;
+            this.mediaRecompressMuxer.StandardOutputReceived += ProcessStandardOutputReceived;
+            this.mediaRecompressMuxer.StandardErrorReceived += ProcessStandardErrorReceived;
             this.mediaRecompressMuxer.ProgressUpdate += MediaRecompressMuxerProgressHandler;
         }
 
         public DispatcherQueue Dispatcher { get; set; }
         public FileOpenPicker MediaFilePicker { get; set; }
+
+        private void ProcessStandardOutputReceived(object sender, string data)
+        {
+            if (!string.IsNullOrWhiteSpace(data))
+            {
+                Dispatcher.TryEnqueue(() => ConsoleOutput += $"[{sender.GetType().Name}] <STDOUT> {data.TrimEnd() + Environment.NewLine}");
+            }
+        }
+
+        private void ProcessStandardErrorReceived(object sender, string data)
+        {
+            if (!string.IsNullOrWhiteSpace(data))
+            {
+                Dispatcher.TryEnqueue(() => ConsoleOutput += $"[{sender.GetType().Name}] <STDERR> {data.TrimEnd() + Environment.NewLine}");
+            }
+        }
 
         private void ImageExtractorProgressHandler(object sender, ProgressInfoViewModel progress)
         {
@@ -63,8 +88,9 @@ namespace AnimeSD2HD
         private async void OpenFileExecute(object parameter)
         {
             var file = await MediaFilePicker.PickSingleFileAsync();
-            if (file != null)
+            if (file != null && file.Path != InputMediaFile)
             {
+                ResetProgress();
                 var info = await mediaInfoExtractor.Run(file.Path);
                 InputMediaFile = file.Path;
                 FrameRate = info.FrameRate;
@@ -72,6 +98,20 @@ namespace AnimeSD2HD
                 InputMediaHeight = info.VideoHeight;
                 DisplayAspectRatio = info.DisplayAspectRatio;
             }
+        }
+
+        private void ResetProgress()
+        {
+            ConsoleOutput = string.Empty;
+            ImageExtractorProgress = new ProgressInfoViewModel(true, false, 0d, 0d, 1d, TimeSpan.Zero);
+            ImageUpscalerProgress = new ProgressInfoViewModel(true, false, 0d, 0d, 1d, TimeSpan.Zero);
+            MediaRecompressMuxerProgress = new ProgressInfoViewModel(true, false, 0d, 0d, 1d, TimeSpan.Zero);
+        }
+
+        public string ConsoleOutput
+        {
+            get => GetPropertyValue<string>();
+            set => SetPropertyValue(value);
         }
 
         public ICommand OpenFileCommand
@@ -105,6 +145,7 @@ namespace AnimeSD2HD
 
         private async void StartExecute(object parameter)
         {
+            ResetProgress();
             StartStopLabel = "Stop"; // Properties.Resources.StartButtonLabel;
             StartStopCommand = new RelayCommand(StopExecute, StopCanExecute);
             try
@@ -166,7 +207,7 @@ namespace AnimeSD2HD
             set
             {
                 SetPropertyValue(value);
-                OutputMediaFile = value + "ᴴᴰ";
+                OutputMediaFile = string.IsNullOrWhiteSpace(value) ? string.Empty : Path.ChangeExtension(value, ".mkvᴴᴰ");
             }
         }
 

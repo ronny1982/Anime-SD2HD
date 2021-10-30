@@ -13,6 +13,8 @@ namespace AnimeSD2HD
         private readonly string ffprobe;
 
         public event EventHandler<ProgressInfoViewModel> ProgressUpdate;
+        public event EventHandler<string> StandardOutputReceived;
+        public event EventHandler<string> StandardErrorReceived;
 
         public MediaInfoExtractor(string application)
         {
@@ -27,8 +29,11 @@ namespace AnimeSD2HD
                 Arguments = $"-hide_banner -i \"{mediaFile}\" -select_streams v:0 -show_entries format=duration:stream=duration,width,height,r_frame_rate,display_aspect_ratio,sample_aspect_ratio -loglevel quiet -of json",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
+                RedirectStandardError = true,
                 CreateNoWindow = true
             };
+            process.OutputDataReceived += (_, args) => StandardOutputReceived?.Invoke(this, args.Data);
+            process.ErrorDataReceived += (_, args) => StandardErrorReceived?.Invoke(this, args.Data);
             process.Start();
             var stdout = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
@@ -45,7 +50,12 @@ namespace AnimeSD2HD
 
         public async Task<MediaInfo> Run(string mediaFile)
         {
+            ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, true, 0d, 1d, 1d, TimeSpan.Zero));
+            var measure = new Stopwatch();
+            measure.Start();
             var (exitcode, info) = await Task.Run(() => Extract(mediaFile));
+            measure.Stop();
+            ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, 1d, 1d, measure.Elapsed));
             return exitcode == 0 ? info : throw new Exception($"Process failed with exit code: {exitcode}");
         }
 
