@@ -22,7 +22,7 @@ namespace AnimeSD2HD
             ffmpeg = application;
         }
 
-        private TimeSpan Extract(ImageExtractorArgs args)
+        private (int exitcode, TimeSpan runtime) Extract(ImageExtractorArgs args)
         {
             var duration = 0d;
             var measure = new Stopwatch();
@@ -61,12 +61,12 @@ namespace AnimeSD2HD
             process.BeginErrorReadLine();
             process.WaitForExit();
             measure.Stop();
-            return measure.Elapsed;
+            return (process.ExitCode, measure.Elapsed);
         }
 
         public async Task<Void> Run(ImageExtractorArgs args)
         {
-            var elapsed = await Task.Run(() => {
+            var (exitcode, runtime) = await Task.Run(() => {
                 if (Directory.Exists(args.OutputDirectory))
                 {
                     Directory.Delete(args.OutputDirectory, true);
@@ -74,8 +74,8 @@ namespace AnimeSD2HD
                 Directory.CreateDirectory(args.OutputDirectory);
                 return Extract(args);
             });
-            ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, 1d, 1d, elapsed));
-            return Void.Default;
+            ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, 1d, 1d, runtime));
+            return exitcode == 0 ? Void.Default : throw new Exception($"Process failed with exit code: {exitcode}");
         }
 
         public async Task Abort()

@@ -12,6 +12,7 @@ namespace AnimeSD2HD
     internal class ImageRecompressMuxer : IExternalProcess<Void, ImageRecompressMuxerArgs>
     {
         private readonly string ffmpeg;
+        private const string globImage = "*.png";
         private readonly Regex rgxFrame = new(@"frame=\s*(?<FRAME>\d+)");
 
         public event EventHandler<ProgressInfoViewModel> ProgressUpdate;
@@ -21,10 +22,10 @@ namespace AnimeSD2HD
             ffmpeg = application;
         }
 
-        private TimeSpan Extract(ImageRecompressMuxerArgs args)
+        private (int exitcode, TimeSpan runtime) Extract(ImageRecompressMuxerArgs args)
         {
             var measure = new Stopwatch();
-            var imageCount = Directory.EnumerateFiles(args.InputDirectory, "*.png").Count();
+            var imageCount = Directory.EnumerateFiles(args.InputDirectory, globImage).Count();
             using var process = new Process();
             process.StartInfo = new ProcessStartInfo(ffmpeg)
             {
@@ -50,15 +51,14 @@ namespace AnimeSD2HD
             process.BeginErrorReadLine();
             process.WaitForExit();
             measure.Stop();
-            return measure.Elapsed;
+            return (process.ExitCode, measure.Elapsed);
         }
 
         public async Task<Void> Run(ImageRecompressMuxerArgs args)
         {
-            //ProgressUpdate?.Invoke(this, new ProgressInfo(true, true, 0d, 1d, 0d, TimeSpan.Zero));
-            var elapsed = await Task.Run(() => Extract(args));
-            ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, 1d, 1d, elapsed));
-            return Void.Default;
+            var (exitcode, runtime) = await Task.Run(() => Extract(args));
+            ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, 1d, 1d, runtime));
+            return exitcode == 0 ? Void.Default : throw new Exception($"Process failed with exit code: {exitcode}");
         }
 
         public async Task Abort()

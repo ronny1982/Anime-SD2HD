@@ -8,10 +8,6 @@ namespace AnimeSD2HD
 {
     internal class ConfigurationViewModel : ViewModel
     {
-        // TODO: get from application directory ...
-        //private readonly string ffmpeg = @"D:\Video Tools\ffmpeg.exe";
-        //private readonly string waifu = @"D:\Video Tools\waifu2x-ncnn-vulkan\waifu2x-ncnn-vulkan.exe";
-
         private readonly IExternalProcess<MediaInfo, string> mediaInfoExtractor;
         private readonly IExternalProcess<Void, ImageExtractorArgs> imageExtractor;
         private readonly IExternalProcess<Void, ImageUpscalerArgs> imageUpscaler;
@@ -111,14 +107,21 @@ namespace AnimeSD2HD
         {
             StartStopLabel = "Stop"; // Properties.Resources.StartButtonLabel;
             StartStopCommand = new RelayCommand(StopExecute, StopCanExecute);
-            //imageExtractor.ProgressUpdate += (_, args) => { };
-            await imageExtractor.Run(new ImageExtractorArgs(InputMediaFile, ExtractionDirectory, ExtractMediaWidth, ExtractMediaHeight));
-            //imageUpscaler.ProgressUpdate += (_, args) => { };
-            await imageUpscaler.Run(new ImageUpscalerArgs(ExtractionDirectory, UpscaleDirectory, UpscaleModel.ID, ScalingFactor, DenoiseLevel));
-            //mediaRecompressMuxer.ProgressUpdate += (_, args) => { };
-            await mediaRecompressMuxer.Run(new ImageRecompressMuxerArgs(InputMediaFile, UpscaleDirectory, OutputMediaFile, FrameRate, SubtitleCodec, AudioCodec, AudioBitrate, VideoCodec, VideoCRF, VideoPreset, VideoTuning));
-            // TODO: clean-up ...
-            StopExecute(parameter);
+            try
+            {
+                await imageExtractor.Run(new ImageExtractorArgs(InputMediaFile, ExtractionDirectory, ExtractMediaWidth, ExtractMediaHeight));
+                await imageUpscaler.Run(new ImageUpscalerArgs(ExtractionDirectory, UpscaleDirectory, UpscaleModel.ID, ScalingFactor, DenoiseLevel));
+                await mediaRecompressMuxer.Run(new ImageRecompressMuxerArgs(InputMediaFile, UpscaleDirectory, OutputMediaFile, FrameRate, SubtitleCodec, AudioCodec, AudioBitrate, VideoCodec, VideoCRF, VideoPreset, VideoTuning));
+            }
+            catch
+            {
+                // TODO: error handling ...
+            }
+            finally
+            {
+                // TODO: clean-up ...
+                StopExecute(parameter);
+            }
         }
 
         private bool StopCanExecute(object parameter)
@@ -128,11 +131,21 @@ namespace AnimeSD2HD
 
         private void StopExecute(object parameter)
         {
-            imageExtractor.Abort();
-            imageUpscaler.Abort();
-            mediaRecompressMuxer.Abort();
-            StartStopCommand = new RelayCommand(StartExecute, StartCanExecute);
-            StartStopLabel = "Start";
+            try
+            {
+                imageExtractor.Abort();
+                imageUpscaler.Abort();
+                mediaRecompressMuxer.Abort();
+            }
+            catch
+            {
+                // TODO: error handling ...
+            }
+            finally
+            {
+                StartStopCommand = new RelayCommand(StartExecute, StartCanExecute);
+                StartStopLabel = "Start";
+            }
         }
 
         public ICommand StartStopCommand

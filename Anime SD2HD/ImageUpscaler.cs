@@ -11,6 +11,7 @@ namespace AnimeSD2HD
     internal class ImageUpscaler : IExternalProcess<Void, ImageUpscalerArgs>
     {
         private readonly string waifu;
+        private const string globImage = "*.png";
 
         public event EventHandler<ProgressInfoViewModel> ProgressUpdate;
 
@@ -19,7 +20,7 @@ namespace AnimeSD2HD
             waifu = application;
         }
 
-        private void Extract(ImageUpscalerArgs args)
+        private int Upscale(ImageUpscalerArgs args)
         {
             using var process = new Process();
             process.StartInfo = new ProcessStartInfo(waifu)
@@ -36,22 +37,23 @@ namespace AnimeSD2HD
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
             process.WaitForExit();
+            return process.ExitCode;
         }
 
         public async Task<Void> Run(ImageUpscalerArgs args)
         {
             var measure = new Stopwatch();
-            var imageCount = Directory.EnumerateFiles(args.InputDirectory, "*.png").Count();
+            var imageCount = Directory.EnumerateFiles(args.InputDirectory, globImage).Count();
             var timer = new System.Timers.Timer(2500)
             {
                 AutoReset = true
             };
             timer.Elapsed += (_, __) =>
             {
-                var processedCount = Directory.EnumerateFiles(args.OutputDirectory, "*.png").Count();
+                var processedCount = Directory.EnumerateFiles(args.OutputDirectory, globImage).Count();
                 ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, imageCount, processedCount, measure.Elapsed));
             };
-            await Task.Run(() => {
+            var exitcode = await Task.Run(() => {
                 if (Directory.Exists(args.OutputDirectory))
                 {
                     Directory.Delete(args.OutputDirectory, true);
@@ -59,12 +61,13 @@ namespace AnimeSD2HD
                 Directory.CreateDirectory(args.OutputDirectory);
                 timer.Start();
                 measure.Start();
-                Extract(args);
+                var exitcode = Upscale(args);
                 measure.Stop();
                 timer.Stop();
+                return exitcode;
             });
             ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, 1d, 1d, measure.Elapsed));
-            return Void.Default;
+            return exitcode == 0 ? Void.Default : throw new Exception($"Process failed with exit code: {exitcode}");
         }
 
         public async Task Abort()

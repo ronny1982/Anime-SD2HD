@@ -19,7 +19,7 @@ namespace AnimeSD2HD
             ffprobe = application;
         }
 
-        private MediaInfo Extract(string mediaFile)
+        private (int exitcode, MediaInfo info) Extract(string mediaFile)
         {
             using var process = new Process();
             process.StartInfo = new ProcessStartInfo(ffprobe)
@@ -36,18 +36,17 @@ namespace AnimeSD2HD
             var stream = json.RootElement.GetProperty("streams")[0];
             var dar = stream.GetProperty("display_aspect_ratio").GetString().Split(':').Select(number => Convert.ToInt32(number));
 
-            return new MediaInfo(
+            return (process.ExitCode, new MediaInfo(
                 stream.GetProperty("width").GetInt32(),
                 stream.GetProperty("height").GetInt32(),
                 (dar.First(), dar.Last()),
-                stream.GetProperty("r_frame_rate").GetString());
+                stream.GetProperty("r_frame_rate").GetString()));
         }
 
         public async Task<MediaInfo> Run(string mediaFile)
         {
-            var task = Task.Run(() => Extract(mediaFile));
-            await task;
-            return task.Result;
+            var (exitcode, info) = await Task.Run(() => Extract(mediaFile));
+            return exitcode == 0 ? info : throw new Exception($"Process failed with exit code: {exitcode}");
         }
 
         public Task Abort()
