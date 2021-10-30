@@ -9,7 +9,7 @@ namespace AnimeSD2HD
 
         public MainWindow(ConfigurationViewModel configuration)
         {
-            Title = "Animeᴴᴰ (SD ➔ HD)";
+            Title = "Animeᴴᴰ (Super Resolution SD ➔ HD Upscaler GUI)";
             Configuration = configuration;
             Configuration.Dispatcher = DispatcherQueue;
             Configuration.MediaFilePicker = CreateFilePicker(".mkv", ".mp4");

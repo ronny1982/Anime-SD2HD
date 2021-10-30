@@ -11,210 +11,210 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="ProgressInfo.xaml" />
-    <None Remove="tools\avcodec-58.dll" />
-    <None Remove="tools\avdevice-58.dll" />
-    <None Remove="tools\avfilter-7.dll" />
-    <None Remove="tools\avformat-58.dll" />
-    <None Remove="tools\avutil-56.dll" />
-    <None Remove="tools\ffmpeg.exe" />
-    <None Remove="tools\ffplay.exe" />
-    <None Remove="tools\ffprobe.exe" />
-    <None Remove="tools\models-cunet\noise0_model.bin" />
-    <None Remove="tools\models-cunet\noise0_model.param" />
-    <None Remove="tools\models-cunet\noise0_scale2.0x_model.bin" />
-    <None Remove="tools\models-cunet\noise0_scale2.0x_model.param" />
-    <None Remove="tools\models-cunet\noise1_model.bin" />
-    <None Remove="tools\models-cunet\noise1_model.param" />
-    <None Remove="tools\models-cunet\noise1_scale2.0x_model.bin" />
-    <None Remove="tools\models-cunet\noise1_scale2.0x_model.param" />
-    <None Remove="tools\models-cunet\noise2_model.bin" />
-    <None Remove="tools\models-cunet\noise2_model.param" />
-    <None Remove="tools\models-cunet\noise2_scale2.0x_model.bin" />
-    <None Remove="tools\models-cunet\noise2_scale2.0x_model.param" />
-    <None Remove="tools\models-cunet\noise3_model.bin" />
-    <None Remove="tools\models-cunet\noise3_model.param" />
-    <None Remove="tools\models-cunet\noise3_scale2.0x_model.bin" />
-    <None Remove="tools\models-cunet\noise3_scale2.0x_model.param" />
-    <None Remove="tools\models-cunet\scale2.0x_model.bin" />
-    <None Remove="tools\models-cunet\scale2.0x_model.param" />
-    <None Remove="tools\models-upconv_7_anime_style_art_rgb\noise0_scale2.0x_model.bin" />
-    <None Remove="tools\models-upconv_7_anime_style_art_rgb\noise0_scale2.0x_model.param" />
-    <None Remove="tools\models-upconv_7_anime_style_art_rgb\noise1_scale2.0x_model.bin" />
-    <None Remove="tools\models-upconv_7_anime_style_art_rgb\noise1_scale2.0x_model.param" />
-    <None Remove="tools\models-upconv_7_anime_style_art_rgb\noise2_scale2.0x_model.bin" />
-    <None Remove="tools\models-upconv_7_anime_style_art_rgb\noise2_scale2.0x_model.param" />
-    <None Remove="tools\models-upconv_7_anime_style_art_rgb\noise3_scale2.0x_model.bin" />
-    <None Remove="tools\models-upconv_7_anime_style_art_rgb\noise3_scale2.0x_model.param" />
-    <None Remove="tools\models-upconv_7_anime_style_art_rgb\scale2.0x_model.bin" />
-    <None Remove="tools\models-upconv_7_anime_style_art_rgb\scale2.0x_model.param" />
-    <None Remove="tools\models-upconv_7_photo\noise0_scale2.0x_model.bin" />
-    <None Remove="tools\models-upconv_7_photo\noise0_scale2.0x_model.param" />
-    <None Remove="tools\models-upconv_7_photo\noise1_scale2.0x_model.bin" />
-    <None Remove="tools\models-upconv_7_photo\noise1_scale2.0x_model.param" />
-    <None Remove="tools\models-upconv_7_photo\noise2_scale2.0x_model.bin" />
-    <None Remove="tools\models-upconv_7_photo\noise2_scale2.0x_model.param" />
-    <None Remove="tools\models-upconv_7_photo\noise3_scale2.0x_model.bin" />
-    <None Remove="tools\models-upconv_7_photo\noise3_scale2.0x_model.param" />
-    <None Remove="tools\models-upconv_7_photo\scale2.0x_model.bin" />
-    <None Remove="tools\models-upconv_7_photo\scale2.0x_model.param" />
-    <None Remove="tools\postproc-55.dll" />
-    <None Remove="tools\swresample-3.dll" />
-    <None Remove="tools\swscale-5.dll" />
-    <None Remove="tools\vcomp140.dll" />
-    <None Remove="tools\waifu2x-ncnn-vulkan.exe" />
+    <None Remove="Tools\avcodec-58.dll" />
+    <None Remove="Tools\avdevice-58.dll" />
+    <None Remove="Tools\avfilter-7.dll" />
+    <None Remove="Tools\avformat-58.dll" />
+    <None Remove="Tools\avutil-56.dll" />
+    <None Remove="Tools\ffmpeg.exe" />
+    <None Remove="Tools\ffplay.exe" />
+    <None Remove="Tools\ffprobe.exe" />
+    <None Remove="Tools\models-cunet\noise0_model.bin" />
+    <None Remove="Tools\models-cunet\noise0_model.param" />
+    <None Remove="Tools\models-cunet\noise0_scale2.0x_model.bin" />
+    <None Remove="Tools\models-cunet\noise0_scale2.0x_model.param" />
+    <None Remove="Tools\models-cunet\noise1_model.bin" />
+    <None Remove="Tools\models-cunet\noise1_model.param" />
+    <None Remove="Tools\models-cunet\noise1_scale2.0x_model.bin" />
+    <None Remove="Tools\models-cunet\noise1_scale2.0x_model.param" />
+    <None Remove="Tools\models-cunet\noise2_model.bin" />
+    <None Remove="Tools\models-cunet\noise2_model.param" />
+    <None Remove="Tools\models-cunet\noise2_scale2.0x_model.bin" />
+    <None Remove="Tools\models-cunet\noise2_scale2.0x_model.param" />
+    <None Remove="Tools\models-cunet\noise3_model.bin" />
+    <None Remove="Tools\models-cunet\noise3_model.param" />
+    <None Remove="Tools\models-cunet\noise3_scale2.0x_model.bin" />
+    <None Remove="Tools\models-cunet\noise3_scale2.0x_model.param" />
+    <None Remove="Tools\models-cunet\scale2.0x_model.bin" />
+    <None Remove="Tools\models-cunet\scale2.0x_model.param" />
+    <None Remove="Tools\models-upconv_7_anime_style_art_rgb\noise0_scale2.0x_model.bin" />
+    <None Remove="Tools\models-upconv_7_anime_style_art_rgb\noise0_scale2.0x_model.param" />
+    <None Remove="Tools\models-upconv_7_anime_style_art_rgb\noise1_scale2.0x_model.bin" />
+    <None Remove="Tools\models-upconv_7_anime_style_art_rgb\noise1_scale2.0x_model.param" />
+    <None Remove="Tools\models-upconv_7_anime_style_art_rgb\noise2_scale2.0x_model.bin" />
+    <None Remove="Tools\models-upconv_7_anime_style_art_rgb\noise2_scale2.0x_model.param" />
+    <None Remove="Tools\models-upconv_7_anime_style_art_rgb\noise3_scale2.0x_model.bin" />
+    <None Remove="Tools\models-upconv_7_anime_style_art_rgb\noise3_scale2.0x_model.param" />
+    <None Remove="Tools\models-upconv_7_anime_style_art_rgb\scale2.0x_model.bin" />
+    <None Remove="Tools\models-upconv_7_anime_style_art_rgb\scale2.0x_model.param" />
+    <None Remove="Tools\models-upconv_7_photo\noise0_scale2.0x_model.bin" />
+    <None Remove="Tools\models-upconv_7_photo\noise0_scale2.0x_model.param" />
+    <None Remove="Tools\models-upconv_7_photo\noise1_scale2.0x_model.bin" />
+    <None Remove="Tools\models-upconv_7_photo\noise1_scale2.0x_model.param" />
+    <None Remove="Tools\models-upconv_7_photo\noise2_scale2.0x_model.bin" />
+    <None Remove="Tools\models-upconv_7_photo\noise2_scale2.0x_model.param" />
+    <None Remove="Tools\models-upconv_7_photo\noise3_scale2.0x_model.bin" />
+    <None Remove="Tools\models-upconv_7_photo\noise3_scale2.0x_model.param" />
+    <None Remove="Tools\models-upconv_7_photo\scale2.0x_model.bin" />
+    <None Remove="Tools\models-upconv_7_photo\scale2.0x_model.param" />
+    <None Remove="Tools\postproc-55.dll" />
+    <None Remove="Tools\swresample-3.dll" />
+    <None Remove="Tools\swscale-5.dll" />
+    <None Remove="Tools\vcomp140.dll" />
+    <None Remove="Tools\waifu2x-ncnn-vulkan.exe" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="tools\avcodec-58.dll">
+    <Content Include="Tools\avcodec-58.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\avdevice-58.dll">
+    <Content Include="Tools\avdevice-58.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\avfilter-7.dll">
+    <Content Include="Tools\avfilter-7.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\avformat-58.dll">
+    <Content Include="Tools\avformat-58.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\avutil-56.dll">
+    <Content Include="Tools\avutil-56.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\ffmpeg.exe">
+    <Content Include="Tools\ffmpeg.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\ffplay.exe">
+    <Content Include="Tools\ffplay.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\ffprobe.exe">
+    <Content Include="Tools\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise0_model.bin">
+    <Content Include="Tools\models-cunet\noise0_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise0_model.param">
+    <Content Include="Tools\models-cunet\noise0_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise0_scale2.0x_model.bin">
+    <Content Include="Tools\models-cunet\noise0_scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise0_scale2.0x_model.param">
+    <Content Include="Tools\models-cunet\noise0_scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise1_model.bin">
+    <Content Include="Tools\models-cunet\noise1_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise1_model.param">
+    <Content Include="Tools\models-cunet\noise1_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise1_scale2.0x_model.bin">
+    <Content Include="Tools\models-cunet\noise1_scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise1_scale2.0x_model.param">
+    <Content Include="Tools\models-cunet\noise1_scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise2_model.bin">
+    <Content Include="Tools\models-cunet\noise2_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise2_model.param">
+    <Content Include="Tools\models-cunet\noise2_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise2_scale2.0x_model.bin">
+    <Content Include="Tools\models-cunet\noise2_scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise2_scale2.0x_model.param">
+    <Content Include="Tools\models-cunet\noise2_scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise3_model.bin">
+    <Content Include="Tools\models-cunet\noise3_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise3_model.param">
+    <Content Include="Tools\models-cunet\noise3_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise3_scale2.0x_model.bin">
+    <Content Include="Tools\models-cunet\noise3_scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\noise3_scale2.0x_model.param">
+    <Content Include="Tools\models-cunet\noise3_scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\scale2.0x_model.bin">
+    <Content Include="Tools\models-cunet\scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-cunet\scale2.0x_model.param">
+    <Content Include="Tools\models-cunet\scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_anime_style_art_rgb\noise0_scale2.0x_model.bin">
+    <Content Include="Tools\models-upconv_7_anime_style_art_rgb\noise0_scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_anime_style_art_rgb\noise0_scale2.0x_model.param">
+    <Content Include="Tools\models-upconv_7_anime_style_art_rgb\noise0_scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_anime_style_art_rgb\noise1_scale2.0x_model.bin">
+    <Content Include="Tools\models-upconv_7_anime_style_art_rgb\noise1_scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_anime_style_art_rgb\noise1_scale2.0x_model.param">
+    <Content Include="Tools\models-upconv_7_anime_style_art_rgb\noise1_scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_anime_style_art_rgb\noise2_scale2.0x_model.bin">
+    <Content Include="Tools\models-upconv_7_anime_style_art_rgb\noise2_scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_anime_style_art_rgb\noise2_scale2.0x_model.param">
+    <Content Include="Tools\models-upconv_7_anime_style_art_rgb\noise2_scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_anime_style_art_rgb\noise3_scale2.0x_model.bin">
+    <Content Include="Tools\models-upconv_7_anime_style_art_rgb\noise3_scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_anime_style_art_rgb\noise3_scale2.0x_model.param">
+    <Content Include="Tools\models-upconv_7_anime_style_art_rgb\noise3_scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_anime_style_art_rgb\scale2.0x_model.bin">
+    <Content Include="Tools\models-upconv_7_anime_style_art_rgb\scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_anime_style_art_rgb\scale2.0x_model.param">
+    <Content Include="Tools\models-upconv_7_anime_style_art_rgb\scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_photo\noise0_scale2.0x_model.bin">
+    <Content Include="Tools\models-upconv_7_photo\noise0_scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_photo\noise0_scale2.0x_model.param">
+    <Content Include="Tools\models-upconv_7_photo\noise0_scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_photo\noise1_scale2.0x_model.bin">
+    <Content Include="Tools\models-upconv_7_photo\noise1_scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_photo\noise1_scale2.0x_model.param">
+    <Content Include="Tools\models-upconv_7_photo\noise1_scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_photo\noise2_scale2.0x_model.bin">
+    <Content Include="Tools\models-upconv_7_photo\noise2_scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_photo\noise2_scale2.0x_model.param">
+    <Content Include="Tools\models-upconv_7_photo\noise2_scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_photo\noise3_scale2.0x_model.bin">
+    <Content Include="Tools\models-upconv_7_photo\noise3_scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_photo\noise3_scale2.0x_model.param">
+    <Content Include="Tools\models-upconv_7_photo\noise3_scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_photo\scale2.0x_model.bin">
+    <Content Include="Tools\models-upconv_7_photo\scale2.0x_model.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\models-upconv_7_photo\scale2.0x_model.param">
+    <Content Include="Tools\models-upconv_7_photo\scale2.0x_model.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\postproc-55.dll">
+    <Content Include="Tools\postproc-55.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\swresample-3.dll">
+    <Content Include="Tools\swresample-3.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\swscale-5.dll">
+    <Content Include="Tools\swscale-5.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\vcomp140.dll">
+    <Content Include="Tools\vcomp140.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\waifu2x-ncnn-vulkan.exe">
+    <Content Include="Tools\waifu2x-ncnn-vulkan.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
