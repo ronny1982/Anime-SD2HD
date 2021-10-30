@@ -37,6 +37,7 @@ namespace AnimeSD2HD
                 RedirectStandardError = true,
                 CreateNoWindow = true
             };
+            StandardOutputReceived?.Invoke(this, process.StartInfo.FileName + " " + process.StartInfo.Arguments);
             process.OutputDataReceived += (_, args) => StandardOutputReceived?.Invoke(this, args.Data);
             process.ErrorDataReceived += (_, args) =>
             {
