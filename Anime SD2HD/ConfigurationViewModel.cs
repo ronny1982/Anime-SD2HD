@@ -23,7 +23,7 @@ namespace AnimeSD2HD
             VideoCRF = 20;
             ScalingFactor = 2;
             OutputMediaHeight = 1080;
-            DisplayAspectRatio = (16, 9);
+            DisplayAspectRatio = new DisplayAspectRatio(16, 9);
             UpscaleModel = AvailableUpscaleModels.First();
             OpenFileCommand = new RelayCommand(OpenFileExecute, OpenFileCanExecute);
             StartStopCommand = new RelayCommand(StartExecute, StartCanExecute);
@@ -223,9 +223,9 @@ namespace AnimeSD2HD
             set => SetPropertyValue(value);
         }
 
-        private (int width, int height) DisplayAspectRatio
+        private DisplayAspectRatio DisplayAspectRatio
         {
-            get => GetPropertyValue<(int width, int height)>();
+            get => GetPropertyValue<DisplayAspectRatio>();
             set
             {
                 SetPropertyValue(value);
@@ -257,7 +257,7 @@ namespace AnimeSD2HD
 
         public int OutputMediaWidth {
             get {
-                var width = DisplayAspectRatio.height > 0 ? DisplayAspectRatio.width * OutputMediaHeight / DisplayAspectRatio.height : 0;
+                var width = (int)Math.Round(OutputMediaHeight * DisplayAspectRatio.Ratio, MidpointRounding.AwayFromZero);
                 return width % 2 == 0 ? width : width + 1;
             }
         }

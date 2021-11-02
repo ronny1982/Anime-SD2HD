@@ -6,11 +6,44 @@ using System.Threading.Tasks;
 
 namespace AnimeSD2HD
 {
-    internal record MediaInfo(int VideoWidth, int VideoHeight, (int width, int height) DisplayAspectRatio, string FrameRate);
+    internal record MediaInfo(int VideoWidth, int VideoHeight, DisplayAspectRatio DisplayAspectRatio, string FrameRate);
+
+    internal record DisplayAspectRatio(int Width, int Height)
+    {
+        public static DisplayAspectRatio Parse(string format)
+        {
+            var dar = format.Split(':').Select(number => Convert.ToInt32(number));
+            return new DisplayAspectRatio(dar.First(), dar.Last());
+        }
+        public double Ratio { get; init; } = Height > 0d ? (double)Width / (double)Height : 0d;
+    }
 
     internal class MediaInfoExtractor : IExternalProcess<MediaInfo, string>
     {
         private readonly string ffprobe;
+        private readonly DisplayAspectRatio[] commonDAR = new[]
+        {
+            new DisplayAspectRatio(1, 1),     // Square
+            new DisplayAspectRatio(4, 3),     // Silent Film/NTSC
+            new DisplayAspectRatio(137, 100), // Academy Ratio
+            new DisplayAspectRatio(143, 100), // IMAX
+            new DisplayAspectRatio(3, 2),     // Classic 35mm
+            new DisplayAspectRatio(16, 10),   // ...
+            new DisplayAspectRatio(7, 4),     // Metroscope
+            new DisplayAspectRatio(16, 9),    // ...
+            new DisplayAspectRatio(185, 100), // Vistavision
+            new DisplayAspectRatio(2, 1),     // Panascope & RED
+            new DisplayAspectRatio(22, 10),   // Todd AI
+            new DisplayAspectRatio(21, 9),    // ...
+            new DisplayAspectRatio(235, 100), // Cinemascope
+            new DisplayAspectRatio(239, 100), // Theatrical & Blu-ray
+            new DisplayAspectRatio(255, 100), // Vintage Cinemascope
+            new DisplayAspectRatio(275, 100), // Ultra Panavision
+            new DisplayAspectRatio(276, 100), // MGM Camera 65
+            new DisplayAspectRatio(3, 1),     // Extreme Scope
+            new DisplayAspectRatio(32, 9),    // ...
+            new DisplayAspectRatio(4, 1),     // PolyVision
+        };
 
         public event EventHandler<ProgressInfoViewModel> ProgressUpdate;
         public event EventHandler<string> StandardOutputReceived;
@@ -40,12 +73,13 @@ namespace AnimeSD2HD
             process.WaitForExit();
             var json = JsonDocument.Parse(stdout);
             var stream = json.RootElement.GetProperty("streams")[0];
-            var dar = stream.GetProperty("display_aspect_ratio").GetString().Split(':').Select(number => Convert.ToInt32(number));
+            var mediaDAR = DisplayAspectRatio.Parse(stream.GetProperty("display_aspect_ratio").GetString());
+            var dar = commonDAR.OrderBy(curDAR => Math.Abs(curDAR.Ratio - mediaDAR.Ratio)).FirstOrDefault(curDAR => Math.Abs(curDAR.Ratio - mediaDAR.Ratio) < 0.01d) ?? mediaDAR;
 
             return (process.ExitCode, new MediaInfo(
                 stream.GetProperty("width").GetInt32(),
                 stream.GetProperty("height").GetInt32(),
-                (dar.First(), dar.Last()),
+                dar,
                 stream.GetProperty("r_frame_rate").GetString()));
         }
 
