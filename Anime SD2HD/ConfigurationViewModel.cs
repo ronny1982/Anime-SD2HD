@@ -162,8 +162,28 @@ namespace AnimeSD2HD
             }
             finally
             {
-                // TODO: clean-up ...
-                StopExecute(null);
+                Cleanup();
+                StartStopCommand = new RelayCommand(StartExecute, StartCanExecute);
+                StartStopLabel = "Start";
+            }
+        }
+
+        private void Cleanup()
+        {
+            try
+            {
+                if (Directory.Exists(ExtractionDirectory))
+                {
+                    Directory.Delete(ExtractionDirectory, true);
+                }
+                if (Directory.Exists(UpscaleDirectory))
+                {
+                    Directory.Delete(UpscaleDirectory, true);
+                }
+            }
+            catch
+            {
+                // TODO: error handling ...
             }
         }
 
@@ -183,11 +203,6 @@ namespace AnimeSD2HD
             catch
             {
                 // TODO: error handling ...
-            }
-            finally
-            {
-                StartStopCommand = new RelayCommand(StartExecute, StartCanExecute);
-                StartStopLabel = "Start";
             }
         }
 
