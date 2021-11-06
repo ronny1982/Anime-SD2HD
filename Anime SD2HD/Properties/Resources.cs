@@ -2,6 +2,7 @@
 {
     internal static class Resources
     {
+        public static string WindowTitle => "Animeᴴᴰ (Super Resolution SD ➔ HD Upscaler GUI)";
         public static string OpenSourceMediaButton_Label => "Source File …";
         public static string OpenTargetMediaButton_Label => "Target File …";
         public static string StartButton_Label => "Start";

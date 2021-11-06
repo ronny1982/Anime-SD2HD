@@ -3,7 +3,6 @@ using Microsoft.UI.Dispatching;
 using System;
 using System.IO;
 using System.Linq;
-using System.Windows.Input;
 using Windows.Storage.Pickers;
 
 namespace AnimeSD2HD
@@ -28,9 +27,11 @@ namespace AnimeSD2HD
             OutputMediaHeight = 1080;
             DisplayAspectRatio = new DisplayAspectRatio(16, 9);
             UpscaleModel = AvailableUpscaleModels.First();
-            OpenFileCommand = new RelayCommand(OpenFileExecute, OpenFileCanExecute);
-            StartStopCommand = new RelayCommand(StartExecute, StartCanExecute);
-            StartStopLabel = Resources.StartButton_Label;
+            OpenSourceMediaCommand = new RelayCommand(Resources.OpenSourceMediaButton_Label, OpenFileExecute, OpenFileCanExecute);
+            OpenTargetMediaCommand = new RelayCommand(Resources.OpenTargetMediaButton_Label, _ => {}, _ => false);
+            StartCommand = new RelayCommand(Resources.StartButton_Label, StartExecute, StartCanExecute);
+            StopCommand = new RelayCommand(Resources.StopButton_Label, StopExecute, StopCanExecute);
+            StartStopCommand = StartCommand;
 
             this.cleaner = cleaner;
             this.mediaInfoExtractor = mediaInfoExtractor;
@@ -118,9 +119,15 @@ namespace AnimeSD2HD
             set => SetPropertyValue(value);
         }
 
-        public ICommand OpenFileCommand
+        public RelayCommand OpenSourceMediaCommand
         {
-            get => GetPropertyValue<ICommand>();
+            get => GetPropertyValue<RelayCommand>();
+            set => SetPropertyValue(value);
+        }
+
+        public RelayCommand OpenTargetMediaCommand
+        {
+            get => GetPropertyValue<RelayCommand>();
             set => SetPropertyValue(value);
         }
 
@@ -150,8 +157,7 @@ namespace AnimeSD2HD
         private async void StartExecute(object _)
         {
             ResetProgress();
-            StartStopLabel = Resources.StopButton_Label;
-            StartStopCommand = new RelayCommand(StopExecute, StopCanExecute);
+            StartStopCommand = StopCommand;
             try
             {
                 await imageExtractor.Run(new ImageExtractorArgs(InputMediaFile, ExtractionDirectory, ExtractMediaWidth, ExtractMediaHeight));
@@ -167,8 +173,7 @@ namespace AnimeSD2HD
             finally
             {
                 cleaner.Cleanup(ExtractionDirectory, UpscaleDirectory);
-                StartStopCommand = new RelayCommand(StartExecute, StartCanExecute);
-                StartStopLabel = Resources.StartButton_Label;
+                StartStopCommand = StartCommand;
             }
         }
 
@@ -191,15 +196,12 @@ namespace AnimeSD2HD
             }
         }
 
-        public ICommand StartStopCommand
-        {
-            get => GetPropertyValue<ICommand>();
-            set => SetPropertyValue(value);
-        }
+        private RelayCommand StartCommand { get; }
+        private RelayCommand StopCommand { get; }
 
-        public string StartStopLabel
+        public RelayCommand StartStopCommand
         {
-            get => GetPropertyValue<string>();
+            get => GetPropertyValue<RelayCommand>();
             set => SetPropertyValue(value);
         }
 

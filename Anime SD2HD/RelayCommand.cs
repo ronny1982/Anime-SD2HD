@@ -10,17 +10,20 @@ namespace AnimeSD2HD
 
         public event EventHandler CanExecuteChanged;
 
-        public RelayCommand(Action<object> commandExecute) : this(commandExecute, _ => true)
+        public RelayCommand(string label, Action<object> commandExecute) : this(label, commandExecute, _ => true)
         {
             // NOTE: Perform a dummy call to get rid of the 'unused member' IntelliSense warning
             CanExecuteChanged?.Invoke(null, EventArgs.Empty);
         }
 
-        public RelayCommand(Action<object> commandExecute, Func<object, bool> commandCanExecute)
+        public RelayCommand(string label, Action<object> commandExecute, Func<object, bool> commandCanExecute)
         {
+            Label = label;
             this.commandExecute = commandExecute;
             this.commandCanExecute = commandCanExecute;
         }
+
+        public string Label { get; }
 
         public bool CanExecute(object parameter) => commandCanExecute(parameter);
 

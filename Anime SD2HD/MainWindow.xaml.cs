@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using AnimeSD2HD.Properties;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Storage.Pickers;
 
@@ -10,7 +11,7 @@ namespace AnimeSD2HD
 
         public MainWindow(ConfigurationViewModel configuration)
         {
-            Title = "Animeᴴᴰ (Super Resolution SD ➔ HD Upscaler GUI)";
+            Title = Resources.WindowTitle;
             Configuration = configuration;
             Configuration.Dispatcher = DispatcherQueue;
             Configuration.MediaFilePicker = CreateFilePicker(".mkv", ".mp4");
