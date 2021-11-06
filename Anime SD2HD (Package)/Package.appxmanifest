@@ -8,11 +8,11 @@
 
   <Identity
     Name="Anime-SD2HD"
-    Publisher="CN=Ronny"
+    Publisher="CN=Animeᴴᴰ"
     Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>Anime SD2HD</DisplayName>
+    <DisplayName>Animeᴴᴰ</DisplayName>
     <PublisherDisplayName>-</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
@@ -31,8 +31,8 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Anime SD2HD"
-        Description="Anime SD2HD"
+        DisplayName="Animeᴴᴰ"
+        Description="GUI for SuperResolution upscaling of SD source Anime (such as DVDs) to HD using FFmpeg and Waifu2x"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">
