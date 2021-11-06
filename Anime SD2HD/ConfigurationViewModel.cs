@@ -87,7 +87,7 @@ namespace AnimeSD2HD
 
         private bool OpenFileCanExecute(object parameter)
         {
-            return true;
+            return IsIdle;
         }
 
         private async void OpenFileExecute(object parameter)
@@ -103,6 +103,7 @@ namespace AnimeSD2HD
                 InputMediaHeight = info.VideoHeight;
                 DisplayAspectRatio = info.DisplayAspectRatio;
             }
+            StartCommand.RaiseCanExecuteChanged();
         }
 
         private void ResetProgress()
@@ -149,15 +150,28 @@ namespace AnimeSD2HD
             set => SetPropertyValue(value);
         }
 
+        public bool IsIdle
+        {
+            get => StartStopCommand == StartCommand;
+            set
+            {
+                StartStopCommand = value ? StartCommand : StopCommand;
+                OpenSourceMediaCommand.RaiseCanExecuteChanged();
+                OpenTargetMediaCommand.RaiseCanExecuteChanged();
+                StartCommand.RaiseCanExecuteChanged();
+                StopCommand.RaiseCanExecuteChanged();
+            }
+        }
+
         private bool StartCanExecute(object _)
         {
-            return true; // !string.IsNullOrWhiteSpace(InputMediaFile);
+            return IsIdle && !string.IsNullOrWhiteSpace(InputMediaFile);
         }
 
         private async void StartExecute(object _)
         {
             ResetProgress();
-            StartStopCommand = StopCommand;
+            IsIdle = false;
             try
             {
                 await imageExtractor.Run(new ImageExtractorArgs(InputMediaFile, ExtractionDirectory, ExtractMediaWidth, ExtractMediaHeight));
@@ -173,13 +187,13 @@ namespace AnimeSD2HD
             finally
             {
                 cleaner.Cleanup(ExtractionDirectory, UpscaleDirectory);
-                StartStopCommand = StartCommand;
+                IsIdle = true;
             }
         }
 
         private bool StopCanExecute(object _)
         {
-            return true;
+            return !IsIdle;
         }
 
         private void StopExecute(object _)
@@ -202,7 +216,11 @@ namespace AnimeSD2HD
         public RelayCommand StartStopCommand
         {
             get => GetPropertyValue<RelayCommand>();
-            set => SetPropertyValue(value);
+            private set
+            {
+                SetPropertyValue(value);
+                RaisePropertyChanged(nameof(IsIdle));
+            }
         }
 
         public string InputMediaFile

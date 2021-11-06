@@ -36,5 +36,10 @@ namespace AnimeSD2HD
                 ConsoleScrollViewer.ScrollToVerticalOffset(ConsoleScrollViewer.ScrollableHeight);
             }
         }
+
+        private void WindowClosedHandler(object sender, WindowEventArgs args)
+        {
+            args.Handled = !Configuration.IsIdle;
+        }
     }
 }

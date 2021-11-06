@@ -12,8 +12,6 @@ namespace AnimeSD2HD
 
         public RelayCommand(string label, Action<object> commandExecute) : this(label, commandExecute, _ => true)
         {
-            // NOTE: Perform a dummy call to get rid of the 'unused member' IntelliSense warning
-            CanExecuteChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public RelayCommand(string label, Action<object> commandExecute, Func<object, bool> commandCanExecute)
@@ -25,8 +23,8 @@ namespace AnimeSD2HD
 
         public string Label { get; }
 
+        public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         public bool CanExecute(object parameter) => commandCanExecute(parameter);
-
         public void Execute(object parameter) => commandExecute(parameter);
     }
 }
