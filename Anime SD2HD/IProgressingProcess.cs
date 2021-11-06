@@ -15,7 +15,6 @@ namespace AnimeSD2HD
         event EventHandler<string> StandardErrorReceived;
 
         Task<Out> Run(In args);
-        Task Cleanup();
         Task Abort();
     };
 }

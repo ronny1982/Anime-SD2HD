@@ -98,10 +98,5 @@ namespace AnimeSD2HD
         {
             return Task.CompletedTask;
         }
-
-        public Task Cleanup()
-        {
-            return Task.CompletedTask;
-        }
     }
 }

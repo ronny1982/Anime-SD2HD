@@ -65,9 +65,10 @@ namespace AnimeSD2HD
             {
                 Kill = null;
                 process.Kill();
-                process.WaitForExit();
+                return process.WaitForExitAsync();
             };
             process.WaitForExit();
+            Kill = null;
             measure.Stop();
             return (process.ExitCode, measure.Elapsed);
         }
@@ -86,17 +87,10 @@ namespace AnimeSD2HD
             return exitcode == 0 ? Void.Default : throw new Exception($"Process failed with exit code: {exitcode}");
         }
 
-        private Action Kill;
-        public async Task Abort()
+        private Func<Task> Kill;
+        public Task Abort()
         {
-            Kill?.Invoke();
-            await Cleanup();
-        }
-
-        public async Task Cleanup()
-        {
-            // TODO: Remove temp data ...
-            await Task.Delay(2500);
+            return Kill?.Invoke() ?? Task.CompletedTask;
         }
     }
 }
