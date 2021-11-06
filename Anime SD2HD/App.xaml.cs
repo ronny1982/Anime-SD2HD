@@ -22,6 +22,7 @@ namespace AnimeSD2HD
         {
             var baseDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var config = new ConfigurationViewModel(
+                new ResidualsCleaner(),
                 new MediaInfoExtractor(Path.Join(baseDirectory, toolsFolders.ffprobe)),
                 new ImageExtractor(Path.Join(baseDirectory, toolsFolders.ffmpeg)),
                 new ImageUpscaler(Path.Join(baseDirectory, toolsFolders.waifu)),

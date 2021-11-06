@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Dispatching;
+﻿using AnimeSD2HD.Properties;
+using Microsoft.UI.Dispatching;
 using System;
 using System.IO;
 using System.Linq;
@@ -9,12 +10,14 @@ namespace AnimeSD2HD
 {
     internal class ConfigurationViewModel : ViewModel
     {
+        private readonly IResidualsCleaner cleaner;
         private readonly IExternalProcess<MediaInfo, string> mediaInfoExtractor;
         private readonly IExternalProcess<Void, ImageExtractorArgs> imageExtractor;
         private readonly IExternalProcess<Void, ImageUpscalerArgs> imageUpscaler;
         private readonly IExternalProcess<Void, ImageRecompressMuxerArgs> mediaRecompressMuxer;
 
         public ConfigurationViewModel(
+            IResidualsCleaner cleaner,
             IExternalProcess<MediaInfo, string> mediaInfoExtractor,
             IExternalProcess<Void, ImageExtractorArgs> imageExtractor,
             IExternalProcess<Void, ImageUpscalerArgs> imageUpscaler,
@@ -27,8 +30,9 @@ namespace AnimeSD2HD
             UpscaleModel = AvailableUpscaleModels.First();
             OpenFileCommand = new RelayCommand(OpenFileExecute, OpenFileCanExecute);
             StartStopCommand = new RelayCommand(StartExecute, StartCanExecute);
-            StartStopLabel = "Start";
+            StartStopLabel = Resources.StartButton_Label;
 
+            this.cleaner = cleaner;
             this.mediaInfoExtractor = mediaInfoExtractor;
             this.mediaInfoExtractor.StandardOutputReceived += ProcessStandardOutputReceived;
             this.mediaInfoExtractor.StandardErrorReceived += ProcessStandardErrorReceived;
@@ -146,7 +150,7 @@ namespace AnimeSD2HD
         private async void StartExecute(object _)
         {
             ResetProgress();
-            StartStopLabel = "Stop"; // Properties.Resources.StartButtonLabel;
+            StartStopLabel = Resources.StopButton_Label;
             StartStopCommand = new RelayCommand(StopExecute, StopCanExecute);
             try
             {
@@ -162,28 +166,9 @@ namespace AnimeSD2HD
             }
             finally
             {
-                Cleanup();
+                cleaner.Cleanup(ExtractionDirectory, UpscaleDirectory);
                 StartStopCommand = new RelayCommand(StartExecute, StartCanExecute);
-                StartStopLabel = "Start";
-            }
-        }
-
-        private void Cleanup()
-        {
-            try
-            {
-                if (Directory.Exists(ExtractionDirectory))
-                {
-                    Directory.Delete(ExtractionDirectory, true);
-                }
-                if (Directory.Exists(UpscaleDirectory))
-                {
-                    Directory.Delete(UpscaleDirectory, true);
-                }
-            }
-            catch
-            {
-                // TODO: error handling ...
+                StartStopLabel = Resources.StartButton_Label;
             }
         }
 
