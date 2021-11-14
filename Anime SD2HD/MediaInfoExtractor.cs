@@ -6,43 +6,33 @@ using System.Threading.Tasks;
 
 namespace AnimeSD2HD
 {
-    internal record MediaInfo(int VideoWidth, int VideoHeight, DisplayAspectRatio DisplayAspectRatio, string FrameRate);
-
-    internal record DisplayAspectRatio(int Width, int Height)
-    {
-        public static DisplayAspectRatio Parse(string format)
-        {
-            var dar = format.Split(':').Select(number => Convert.ToInt32(number));
-            return new DisplayAspectRatio(dar.First(), dar.Last());
-        }
-        public double Ratio { get; init; } = Height > 0d ? (double)Width / (double)Height : 0d;
-    }
+    internal record MediaInfo(int VideoWidth, int VideoHeight, Rational DisplayAspectRatio, Rational FrameRate);
 
     internal class MediaInfoExtractor : IExternalProcess<MediaInfo, string>
     {
         private readonly string ffprobe;
-        private readonly DisplayAspectRatio[] commonDAR = new[]
+        private readonly Rational[] commonDAR = new[]
         {
-            new DisplayAspectRatio(1, 1),     // Square
-            new DisplayAspectRatio(4, 3),     // Silent Film/NTSC
-            new DisplayAspectRatio(137, 100), // Academy Ratio
-            new DisplayAspectRatio(143, 100), // IMAX
-            new DisplayAspectRatio(3, 2),     // Classic 35mm
-            new DisplayAspectRatio(16, 10),   // ...
-            new DisplayAspectRatio(7, 4),     // Metroscope
-            new DisplayAspectRatio(16, 9),    // ...
-            new DisplayAspectRatio(185, 100), // Vistavision
-            new DisplayAspectRatio(2, 1),     // Panascope & RED
-            new DisplayAspectRatio(22, 10),   // Todd AI
-            new DisplayAspectRatio(21, 9),    // ...
-            new DisplayAspectRatio(235, 100), // Cinemascope
-            new DisplayAspectRatio(239, 100), // Theatrical & Blu-ray
-            new DisplayAspectRatio(255, 100), // Vintage Cinemascope
-            new DisplayAspectRatio(275, 100), // Ultra Panavision
-            new DisplayAspectRatio(276, 100), // MGM Camera 65
-            new DisplayAspectRatio(3, 1),     // Extreme Scope
-            new DisplayAspectRatio(32, 9),    // ...
-            new DisplayAspectRatio(4, 1),     // PolyVision
+            new Rational(1, 1),     // Square
+            new Rational(4, 3),     // Silent Film/NTSC
+            new Rational(137, 100), // Academy Ratio
+            new Rational(143, 100), // IMAX
+            new Rational(3, 2),     // Classic 35mm
+            new Rational(16, 10),   // ...
+            new Rational(7, 4),     // Metroscope
+            new Rational(16, 9),    // ...
+            new Rational(185, 100), // Vistavision
+            new Rational(2, 1),     // Panascope & RED
+            new Rational(22, 10),   // Todd AI
+            new Rational(21, 9),    // ...
+            new Rational(235, 100), // Cinemascope
+            new Rational(239, 100), // Theatrical & Blu-ray
+            new Rational(255, 100), // Vintage Cinemascope
+            new Rational(275, 100), // Ultra Panavision
+            new Rational(276, 100), // MGM Camera 65
+            new Rational(3, 1),     // Extreme Scope
+            new Rational(32, 9),    // ...
+            new Rational(4, 1),     // PolyVision
         };
 
         public event EventHandler<ProgressInfoViewModel> ProgressUpdate;
@@ -73,14 +63,11 @@ namespace AnimeSD2HD
             process.WaitForExit();
             var json = JsonDocument.Parse(stdout);
             var stream = json.RootElement.GetProperty("streams")[0];
-            var mediaDAR = DisplayAspectRatio.Parse(stream.GetProperty("display_aspect_ratio").GetString());
-            var dar = commonDAR.OrderBy(curDAR => Math.Abs(curDAR.Ratio - mediaDAR.Ratio)).FirstOrDefault(curDAR => Math.Abs(curDAR.Ratio - mediaDAR.Ratio) < 0.01d) ?? mediaDAR;
+            var mediaDAR = Rational.Parse(stream.GetProperty("display_aspect_ratio").GetString());
+            var dar = commonDAR.OrderBy(curDAR => Math.Abs(curDAR - mediaDAR)).FirstOrDefault(curDAR => Math.Abs(curDAR - mediaDAR) < 0.01d) ?? mediaDAR;
+            var framerate = Rational.Parse(stream.GetProperty("r_frame_rate").GetString());
 
-            return (process.ExitCode, new MediaInfo(
-                stream.GetProperty("width").GetInt32(),
-                stream.GetProperty("height").GetInt32(),
-                dar,
-                stream.GetProperty("r_frame_rate").GetString()));
+            return (process.ExitCode, new MediaInfo(stream.GetProperty("width").GetInt32(), stream.GetProperty("height").GetInt32(), dar, framerate));
         }
 
         public async Task<MediaInfo> Run(string mediaFile)
