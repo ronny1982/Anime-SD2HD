@@ -31,7 +31,25 @@ namespace AnimeSD2HD
             using var process = new Process();
             process.StartInfo = new ProcessStartInfo(ffmpeg)
             {
-                Arguments = $"-hide_banner -framerate {args.FrameRate} -i \"{Path.Join(args.InputDirectory, "%06d.png")}\" -i \"{args.MediaFile}\" -map 0:v -map 1:a? -map 1:s? -f matroska -c:s {args.SubtitleCodec} -c:a {args.AudioCodec} -b:a {args.AudioBitrate} -c:v {args.VideoCodec} -crf {args.VideoCRF} -preset {args.VideoPreset} -tune {args.VideoTuning} -pix_fmt yuv420p -y \"{args.OutputFile}\"",
+                Arguments = string.Join(" ",
+                    $"-hide_banner",
+                    $"-framerate {args.FrameRate}",
+                    $"-i \"{Path.Join(args.InputDirectory, "%06d.png")}\"",
+                    $"-i \"{args.MediaFile}\"",
+                    $"-map 0:v",
+                    $"-map 1:a?",
+                    $"-map 1:s?",
+                    $"-f matroska",
+                    $"-c:s {args.SubtitleCodec}",
+                    $"-c:a {args.AudioCodec}",
+                    $"-b:a {args.AudioBitrate}",
+                    $"-c:v {args.VideoCodec}",
+                    $"-crf {args.VideoCRF}",
+                    $"-preset {args.VideoPreset}",
+                    string.IsNullOrWhiteSpace(args.VideoTuning.Trim('-')) ? string.Empty : $"-tune {args.VideoTuning}",
+                    $"-pix_fmt yuv420p",
+                    $"-y \"{args.OutputFile}\""
+                ),
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
