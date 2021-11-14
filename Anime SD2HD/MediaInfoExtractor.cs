@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AnimeSD2HD
 {
-    internal record MediaInfo(int VideoWidth, int VideoHeight, Rational DisplayAspectRatio, Rational FrameRate);
+    internal record MediaInfo(int VideoWidth, int VideoHeight, Rational DisplayAspectRatio, Rational FrameRate, int EstimatedFrameCount);
 
     internal class MediaInfoExtractor : IExternalProcess<MediaInfo, string>
     {
@@ -66,8 +66,9 @@ namespace AnimeSD2HD
             var mediaDAR = Rational.Parse(stream.GetProperty("display_aspect_ratio").GetString());
             var dar = commonDAR.OrderBy(curDAR => Math.Abs(curDAR - mediaDAR)).FirstOrDefault(curDAR => Math.Abs(curDAR - mediaDAR) < 0.01d) ?? mediaDAR;
             var framerate = Rational.Parse(stream.GetProperty("r_frame_rate").GetString());
+            var frames = framerate * double.Parse(json.RootElement.GetProperty("format").GetProperty("duration").GetString());
 
-            return (process.ExitCode, new MediaInfo(stream.GetProperty("width").GetInt32(), stream.GetProperty("height").GetInt32(), dar, framerate));
+            return (process.ExitCode, new MediaInfo(stream.GetProperty("width").GetInt32(), stream.GetProperty("height").GetInt32(), dar, framerate, (int)frames));
         }
 
         public async Task<MediaInfo> Run(string mediaFile)

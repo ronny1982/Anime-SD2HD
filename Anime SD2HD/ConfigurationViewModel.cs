@@ -102,6 +102,7 @@ namespace AnimeSD2HD
                 InputMediaWidth = info.VideoWidth;
                 InputMediaHeight = info.VideoHeight;
                 DisplayAspectRatio = info.DisplayAspectRatio;
+                EstimatedFrameCount = info.EstimatedFrameCount;
             }
             StartCommand.RaiseCanExecuteChanged();
         }
@@ -174,7 +175,7 @@ namespace AnimeSD2HD
             IsIdle = false;
             try
             {
-                await imageExtractor.Run(new ImageExtractorArgs(InputMediaFile, ExtractionDirectory, ExtractMediaWidth, ExtractMediaHeight));
+                await imageExtractor.Run(new ImageExtractorArgs(InputMediaFile, ExtractionDirectory, ExtractMediaWidth, ExtractMediaHeight, EstimatedFrameCount));
                 ConsoleOutput += Environment.NewLine;
                 await imageUpscaler.Run(new ImageUpscalerArgs(ExtractionDirectory, UpscaleDirectory, UpscaleModel.ID, ScalingFactor, DenoiseLevel));
                 ConsoleOutput += Environment.NewLine;
@@ -260,6 +261,8 @@ namespace AnimeSD2HD
                 RaisePropertyChanged(nameof(OutputMediaWidth), nameof(ExtractMediaWidth), nameof(ExtractMediaHeight));
             }
         }
+
+        private int EstimatedFrameCount { get; set; }
 
         public string FrameRate
         {

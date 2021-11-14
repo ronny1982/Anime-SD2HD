@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace AnimeSD2HD
 {
-    internal record ImageExtractorArgs(string MediaFile, string OutputDirectory, int Width, int Height);
+    internal record ImageExtractorArgs(string MediaFile, string OutputDirectory, int Width, int Height, int EstimatedFrameCount);
 
     internal class ImageExtractor : IExternalProcess<Void, ImageExtractorArgs>
     {
         private readonly string ffmpeg;
-        private const string matchTimeSpan = @"(?<TIME>\d{2}:\d{2}:\d{2}\.\d{2})";
-        private readonly Regex rgxDuration = new(@"DURATION\s*:\s*" + matchTimeSpan);
-        private readonly Regex rgxTime = new(@"time=" + matchTimeSpan);
+        private readonly Regex rgxFrame = new(@"frame=\s*(?<FRAME>\d+)");
 
         public event EventHandler<ProgressInfoViewModel> ProgressUpdate;
         public event EventHandler<string> StandardOutputReceived;
@@ -26,7 +24,7 @@ namespace AnimeSD2HD
 
         private (int exitcode, TimeSpan runtime) Extract(ImageExtractorArgs args)
         {
-            var duration = 0d;
+            var framecount = args.EstimatedFrameCount;
             var measure = new Stopwatch();
             using var process = new Process();
             process.StartInfo = new ProcessStartInfo(ffmpeg)
@@ -41,16 +39,10 @@ namespace AnimeSD2HD
             process.OutputDataReceived += (_, args) => StandardOutputReceived?.Invoke(this, args.Data);
             process.ErrorDataReceived += (_, args) =>
             {
-                // NOTE: use the duration from the last (output) stream, since these are the images extracted from the video
-                var matchDuration = rgxDuration.Match(args.Data ?? string.Empty);
-                if (matchDuration.Success && matchDuration.Groups.TryGetValue("TIME", out var groupDuration) && TimeSpan.TryParse(groupDuration.Value, out var valueDuration))
+                var matchFrame = rgxFrame.Match(args.Data ?? string.Empty);
+                if (matchFrame.Success && matchFrame.Groups.TryGetValue("FRAME", out var group) && int.TryParse(group.Value, out var frame))
                 {
-                    duration = valueDuration.TotalSeconds;
-                }
-                var matchTime = rgxTime.Match(args.Data ?? string.Empty);
-                if (matchTime.Success && matchTime.Groups.TryGetValue("TIME", out var groupTime) && TimeSpan.TryParse(groupTime.Value, out var valueTime))
-                {
-                    ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, duration, valueTime.TotalSeconds, measure.Elapsed, ProgressStatus.Active));
+                    ProgressUpdate?.Invoke(this, new ProgressInfoViewModel(true, false, 0d, framecount, frame, measure.Elapsed, ProgressStatus.Active));
                 }
                 else
                 {
