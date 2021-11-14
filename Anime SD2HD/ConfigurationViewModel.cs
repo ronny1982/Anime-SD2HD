@@ -27,8 +27,8 @@ namespace AnimeSD2HD
             OutputMediaHeight = 1080;
             DisplayAspectRatio = new Rational(16, 9);
             UpscaleModel = AvailableUpscaleModels.First();
-            OpenSourceMediaCommand = new RelayCommand(Resources.OpenSourceMediaButton_Label, OpenFileExecute, OpenFileCanExecute);
-            OpenTargetMediaCommand = new RelayCommand(Resources.OpenTargetMediaButton_Label, _ => {}, _ => false);
+            OpenSourceMediaCommand = new RelayCommand(Resources.OpenSourceMediaButton_Label, OpenSourceFileExecute, OpenSourceFileCanExecute);
+            OpenTargetMediaCommand = new RelayCommand(Resources.OpenTargetMediaButton_Label, OpenTargetFileExecute, OpenTargetFileCanExecute);
             StartCommand = new RelayCommand(Resources.StartButton_Label, StartExecute, StartCanExecute);
             StopCommand = new RelayCommand(Resources.StopButton_Label, StopExecute, StopCanExecute);
             StartStopCommand = StartCommand;
@@ -85,12 +85,12 @@ namespace AnimeSD2HD
             Dispatcher.TryEnqueue(() => MediaRecompressMuxerProgress = progress);
         }
 
-        private bool OpenFileCanExecute(object parameter)
+        private bool OpenSourceFileCanExecute(object parameter)
         {
             return IsIdle;
         }
 
-        private async void OpenFileExecute(object parameter)
+        private async void OpenSourceFileExecute(object parameter)
         {
             var file = await MediaFilePicker.PickSingleFileAsync();
             if (file != null && file.Path != InputMediaFile)
@@ -103,6 +103,21 @@ namespace AnimeSD2HD
                 InputMediaHeight = info.VideoHeight;
                 DisplayAspectRatio = info.DisplayAspectRatio;
                 EstimatedFrameCount = info.EstimatedFrameCount;
+            }
+            StartCommand.RaiseCanExecuteChanged();
+        }
+
+        private bool OpenTargetFileCanExecute(object parameter)
+        {
+            return IsIdle;
+        }
+
+        private async void OpenTargetFileExecute(object parameter)
+        {
+            var file = await MediaFilePicker.PickSingleFileAsync();
+            if (file != null && file.Path != OutputMediaFile)
+            {
+                OutputMediaFile = Path.GetExtension(file.Path) == ".mkv" ? file.Path : Path.ChangeExtension(file.Path, ".mkv");
             }
             StartCommand.RaiseCanExecuteChanged();
         }
@@ -166,7 +181,7 @@ namespace AnimeSD2HD
 
         private bool StartCanExecute(object _)
         {
-            return IsIdle && !string.IsNullOrWhiteSpace(InputMediaFile);
+            return IsIdle && !string.IsNullOrWhiteSpace(InputMediaFile) && !string.IsNullOrWhiteSpace(OutputMediaFile);
         }
 
         private async void StartExecute(object _)
@@ -238,7 +253,7 @@ namespace AnimeSD2HD
             set
             {
                 SetPropertyValue(value);
-                OutputMediaFile = string.IsNullOrWhiteSpace(value) ? string.Empty : Path.ChangeExtension(value, ".mkvᴴᴰ");
+                OutputMediaFile = string.IsNullOrWhiteSpace(value) ? string.Empty : Path.ChangeExtension(value, ".mkv");
             }
         }
 
@@ -249,7 +264,14 @@ namespace AnimeSD2HD
         public string OutputMediaFile
         {
             get => GetPropertyValue<string>();
-            set => SetPropertyValue(value);
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value) && value == InputMediaFile)
+                {
+                    value = Path.ChangeExtension(value, "(1).mkv");
+                }
+                SetPropertyValue(value);
+            }
         }
 
         private Rational DisplayAspectRatio
