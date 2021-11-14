@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Runtime.InteropServices;
 using Windows.Storage.Pickers;
+using Windows.UI.Popups;
 using WinRT.Interop;
 
 namespace AnimeSD2HD
@@ -21,6 +22,7 @@ namespace AnimeSD2HD
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, IntPtr lParam);
 
+        private readonly MessageDialog dialogCloseConfirmation;
         private ConfigurationViewModel Configuration { get; }
 
         public MainWindow(ConfigurationViewModel configuration)
@@ -30,6 +32,7 @@ namespace AnimeSD2HD
             Configuration = configuration;
             Configuration.Dispatcher = DispatcherQueue;
             Configuration.MediaFilePicker = CreateFilePicker(".mkv", ".mp4");
+            dialogCloseConfirmation = CreateCloseConfirmation();
             InitializeComponent();
         }
 
@@ -51,6 +54,19 @@ namespace AnimeSD2HD
             return picker;
         }
 
+        private MessageDialog CreateCloseConfirmation()
+        {
+            var confirmation = new MessageDialog(Resources.CLoseConfirmationMessage, Resources.CLoseConfirmationTitle);
+            InitializeWithWindow.Initialize(confirmation, WindowNative.GetWindowHandle(this));
+            var yes = new UICommand(Resources.CLoseConfirmationButtonYesLabel);
+            var no = new UICommand(Resources.CLoseConfirmationButtonNoLabel);
+            confirmation.Commands.Add(yes);
+            confirmation.Commands.Add(no);
+            confirmation.DefaultCommandIndex = (uint)confirmation.Commands.IndexOf(no);
+            confirmation.CancelCommandIndex = confirmation.DefaultCommandIndex;
+            return confirmation;
+        }
+
         private void TextChangedHandler(object sender, TextChangedEventArgs _)
         {
             if (sender as TextBox == ConsoleTextBox && ConsoleTextBox.FocusState == FocusState.Unfocused)
@@ -61,7 +77,22 @@ namespace AnimeSD2HD
 
         private void WindowClosedHandler(object sender, WindowEventArgs args)
         {
-            args.Handled = !Configuration.IsIdle;
+            if (Configuration.IsIdle)
+            {
+                return;
+            }
+
+            var result = dialogCloseConfirmation.ShowAsync().GetAwaiter().GetResult();
+            var cancel = dialogCloseConfirmation.Commands[(int)dialogCloseConfirmation.CancelCommandIndex];
+
+            if (result == cancel)
+            {
+                args.Handled = true;
+            }
+            else
+            {
+                Configuration.OnClose();
+            }
         }
     }
 }

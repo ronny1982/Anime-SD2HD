@@ -210,6 +210,14 @@ namespace AnimeSD2HD
             }
         }
 
+        public void OnClose()
+        {
+            if (StopCanExecute(null))
+            {
+                StopExecute(null);
+            }
+        }
+
         private RelayCommand StartCommand { get; }
         private RelayCommand StopCommand { get; }
 
