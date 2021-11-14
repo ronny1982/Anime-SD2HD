@@ -110,36 +110,45 @@
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" VerticalAlignment="Center" FontWeight="Bold" Text="Step 3: Re-Compress Media" />
                     <TextBlock Grid.Row="1" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Video Codec" />
-                    <ComboBox Grid.Row="1" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" IsEditable="True" Text="{x:Bind Path=Configuration.VideoCodec, Mode=TwoWay}">
-                        <ComboBoxItem IsSelected="True" Content="libx265" />
+                    <ComboBox x:Name="VideoCodec" Grid.Row="1" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" IsEditable="True" Text="{x:Bind Path=Configuration.VideoCodec, Mode=TwoWay}">
+                        <ComboBoxItem Content="libx264" />
+                        <ComboBoxItem Content="libx265" IsSelected="True" />
                     </ComboBox>
                     <TextBlock Grid.Row="2" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Video Preset" />
                     <ComboBox Grid.Row="2" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" IsEditable="True" Text="{x:Bind Path=Configuration.VideoPreset, Mode=TwoWay}">
-                        <ComboBoxItem IsSelected="True" Content="veryslow" />
+                        <ComboBoxItem Content="veryfast" />
+                        <ComboBoxItem Content="faster" />
+                        <ComboBoxItem Content="fast" />
+                        <ComboBoxItem Content="medium" />
+                        <ComboBoxItem Content="slow" />
+                        <ComboBoxItem Content="slower" />
+                        <ComboBoxItem Content="veryslow" IsSelected="True" />
                     </ComboBox>
                     <TextBlock Grid.Row="3" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Video Tuning" />
                     <ComboBox Grid.Row="3" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" IsEditable="True" Text="{x:Bind Path=Configuration.VideoTuning, Mode=TwoWay}">
-                        <ComboBoxItem IsSelected="True" Content="animation" />
+                        <ComboBoxItem Content="-" IsSelected="True" ToolTipService.ToolTip="Do not use tuning preset" />
+                        <ComboBoxItem Content="animation" ToolTipService.ToolTip="Use 'animation' tuning preset (for x264 and x265)" />
+                        <ComboBoxItem Content="film" ToolTipService.ToolTip="Use 'film' tuning preset (for x264 only)" />
                     </ComboBox>
                     <TextBlock Grid.Row="4" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Video CRF" />
                     <NumberBox Grid.Row="4" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" Minimum="15" Maximum="30" Value="{x:Bind Path=Configuration.VideoCRF, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Grid.Row="5" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Audio Codec" />
                     <ComboBox Grid.Row="5" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" IsEditable="True" Text="{x:Bind Path=Configuration.AudioCodec, Mode=TwoWay}">
                         <ComboBoxItem Content="copy" />
-                        <ComboBoxItem IsSelected="True" Content="aac" />
+                        <ComboBoxItem Content="aac" IsSelected="True" />
                     </ComboBox>
                     <TextBlock Grid.Row="6" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Audio Bitrate" />
                     <ComboBox Grid.Row="6" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" IsEditable="True" Text="{x:Bind Path=Configuration.AudioBitrate, Mode=TwoWay}">
                         <ComboBoxItem Content="64k" />
                         <ComboBoxItem Content="96k" />
-                        <ComboBoxItem IsSelected="True" Content="128k" />
+                        <ComboBoxItem Content="128k" IsSelected="True" />
                         <ComboBoxItem Content="192k" />
                         <ComboBoxItem Content="256k" />
-                        <ComboBoxItem Content="384k" />
+                        <ComboBoxItem Content="320k" />
                     </ComboBox>
                     <TextBlock Grid.Row="7" Grid.Column="0" Margin="4" VerticalAlignment="Center" Text="Subtitle Codec" />
                     <ComboBox Grid.Row="7" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" IsEditable="True" Text="{x:Bind Path=Configuration.SubtitleCodec, Mode=TwoWay}">
-                        <ComboBoxItem IsSelected="True" Content="copy" />
+                        <ComboBoxItem Content="copy" IsSelected="True" />
                     </ComboBox>
                     <animesd2hd:ProgressInfo Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" ViewModel="{x:Bind Path=Configuration.MediaRecompressMuxerProgress, Mode=OneWay}" />
                 </Grid>
